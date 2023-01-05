@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/gob"
+	"log"
 	"os"
 
 	"github.com/hashicorp/go-hclog"
@@ -16,14 +17,14 @@ type YatasPlugin struct {
 
 // Don't remove this function
 func (g *YatasPlugin) Run(c *commons.Config) []commons.Tests {
-	g.logger.Debug("message from Yatas Template Plugin")
+	g.logger.Debug("message from Yatas Notion Plugin")
 	var err error
 	if err != nil {
 		panic(err)
 	}
 	var checksAll []commons.Tests
 
-	checks, err := runPlugin(c, "template")
+	checks, err := runPlugin(c, "notion")
 	if err != nil {
 		g.logger.Error("Error running plugins", "error", err)
 	}
@@ -56,10 +57,10 @@ func main() {
 	// pluginMap is the map of plugins we can dispense.
 	// Name of your plugin
 	var pluginMap = map[string]plugin.Plugin{
-		"template": &commons.YatasPlugin{Impl: yatasPlugin},
+		"notion": &commons.YatasPlugin{Impl: yatasPlugin},
 	}
 
-	logger.Debug("message from plugin", "foo", "bar")
+	logger.Debug("Message from plugin", "YATAS-NOTION", "!")
 
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: handshakeConfig,
@@ -71,7 +72,15 @@ func main() {
 func runPlugin(c *commons.Config, plugin string) ([]commons.Tests, error) {
 	var checksAll []commons.Tests
 
-	// Run the checks here
+	// Load notion account values
+	var account = loadNotionPluginConfig(c)
+
+	// Init client
+	client := NewNotionClient(&account)
+
+	//Init Yatas database
+	isDatabaseExist := initYatasDatabase(&client, &account)
+	log.Printf("%v, databaseID : %v", isDatabaseExist, account.DatabaseID)
 
 	return checksAll, nil
 }
