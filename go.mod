@@ -1,4 +1,4 @@
-module github.com/stangirard/yatas-template
+module github.com/Thibaut-Padok/yatas-notion
 
 go 1.19
 
@@ -9,6 +9,15 @@ require (
 )
 
 require (
+	github.com/google/uuid v1.3.0 // indirect
+	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/kjk/siser v0.0.0-20220410204903-1b1e84ea1397 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/tidwall/pretty v1.2.0 // indirect
+)
+
+require (
 	github.com/aws/aws-sdk-go-v2 v1.16.16 // indirect
 	github.com/aws/smithy-go v1.13.3 // indirect
 	github.com/fatih/color v1.13.0 // indirect
@@ -16,11 +25,14 @@ require (
 	github.com/google/go-github/v35 v35.3.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/yamux v0.1.1 // indirect
+	github.com/jomei/notionapi v1.9.3 // indirect
+	github.com/kjk/notionapi v0.0.0-20220825184122-1127e60626b6
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/oklog/run v1.1.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
 	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
 	golang.org/x/oauth2 v0.0.0-20221006150949-b44042a4b9c1 // indirect

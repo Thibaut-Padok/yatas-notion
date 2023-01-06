@@ -2,31 +2,60 @@
 <img src="docs/auditory.png" alt="yatas-logo" width="30%">
 <p align="center">
 
-# YATAS
-[![codecov](https://codecov.io/gh/StanGirard/yatas-template/branch/main/graph/badge.svg?token=OFGny8Za4x)](https://codecov.io/gh/StanGirard/YATAS) [![goreport](https://goreportcard.com/badge/github.com/stangirard/yatas-template)](https://goreportcard.com/badge/github.com/stangirard/yatas)
+# YATAS Notion export
 
-Yet Another Testing &amp; Auditing Solution 
+A simple idea store easily my yatas report in a notion database
 
-The goal of YATAS is to help you create a secure AWS environment without too much hassle. It won't check for all best practices but only for the ones that are important for you based on my experience. Please feel free to tell me if you find something that is not covered.
+## Getting Started
 
-## Plugins implementation
+### Plugin Usage
 
-Simply use this repository as a template and implement your own plugin.
+Add in .yatas.yml file your plugin configuration:
 
-Don't forget to change the name of the plugin in the `Makefile` and the `go.mod` file.
+```yaml
+plugins:
+  - name: "notion"
+    enabled: true
+    type: "report"
+    source: "github.com/Thibaut-Padok/yatas-notion"
+    version: "latest"
+    description: "Add your yatas report in a notion database"
+pluginsConfiguration:
+  - pluginName: notion
+    pageID: $NotionPageID #The one you want the yatas database to be, it will create the database if not exist. This page must use a Notion connection YATAS-Notion
+    token: $NotionConnectionToken # The secret to be able to use Notion Connection
+    authToken: $token_v2 # The token from the cookies notion web page to be able to call notionapi/v3 and use yatas-notion advanced options. (optional)
+```
 
+Run ```yatas```
 
-Add you code in `main.go` and in the function `RunPlugin` 
-## Usage
+- The Yatas Database will be created if needed
+- The Yatas report will be created in this Yatas database
+- For each test you will have a dedicated page with informations related result.
+- If the authToken is provided and it is valid, the page will be automatically Locked.
+- Enjoy !
 
-Implement your own plugin and build it with the `make build` command. 
+### Important
 
+Such as the Yatas Database is found thanks to his name, please do not change it else a new one will be created.
+Is not in the road map to use a variable because I want to keep the pluginConfiguration as simple as possible.
 
-## How to tests ? 
+## Usage for development
 
-Simply run `make install` and in your Yatas config instead of the version of the plugin use `local` and it will use the version you just installed.
+Useful ```export YATAS_LOG_LEVEL=debug```
 
-## How to deploy ?
+Use ```make install```
 
-You can use the provided workflow to run your plugin in a CI environment. 
-The plugin needs to have a binary that starts with `yatas-` and ends with the name of the plugin in the releases.
+### Information
+
+As I use 2 differents version of notionapi, I also use 2 differents Go library:
+
+- notionapi/v1 : "github.com/jomei/notionapi"
+- notionapi/v3 : "github.com/kjk/notionapi"
+
+But also, this library does not implement all method I need, so I create custom clients with custom methods. Then, I have 4 differents type of client, so to be able to use one of the four client at any time in the code, I choose to manage them thanks to the structure NotionClient. The function take often this objet as argument, like that they could call the different API as they want.
+
+<!-- ## Example
+<p align="center">
+<img src="docs/demo-html.png" alt="yatas-logo" width="30%">
+<p align="center"> -->

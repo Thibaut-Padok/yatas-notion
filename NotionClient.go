@@ -1,10 +1,14 @@
 package main
 
-import "github.com/jomei/notionapi"
+import (
+	"errors"
+
+	"github.com/jomei/notionapi"
+)
 
 type NotionClient struct {
-	NotionClientV1
-	NotionClientV3
+	*NotionClientV1
+	*NotionClientV3
 }
 
 func NewNotionClient(account *NotionAccount) NotionClient {
@@ -15,27 +19,46 @@ func NewNotionClient(account *NotionAccount) NotionClient {
 
 	// Create custom Clients
 	clientV1 := NewClientV1(client, token)
-	clientV3 := NewClientV3(account.AuthToken, account.PageID)
-	notionClient := NotionClient{
-		NotionClientV1: *clientV1,
-		NotionClientV3: *clientV3,
+	var notionClient NotionClient
+	if account.AuthToken != "" {
+		clientV3 := NewClientV3(account.AuthToken, account.PageID)
+		notionClient = NotionClient{
+			NotionClientV1: clientV1,
+			NotionClientV3: clientV3,
+		}
+
+	} else {
+		notionClient = NotionClient{
+			NotionClientV1: clientV1,
+		}
 	}
 	return notionClient
 }
 
 func (client *NotionClient) GetTableViewType(databaseID string) (string, string, bool) {
 	clientV3 := client.NotionClientV3
+	if clientV3 == nil {
+		return "", "", false
+	}
 	return clientV3.GetTableViewType(databaseID)
 }
 
 func (client *NotionClient) UpdateTableViewList(viewID, desiredType string) error {
 	clientV3 := client.NotionClientV3
+	if clientV3 == nil {
+		err := errors.New("NotionClientV3 does not exist, please provide authToken.")
+		return err
+	}
 	err := clientV3.UpdateTableViewList(viewID, desiredType)
 	return err
 }
 
 func (client *NotionClient) LockPage(pageID string) error {
 	clientV3 := client.NotionClientV3
+	if clientV3 == nil {
+		err := errors.New("NotionClientV3 does not exist, please provide authToken.")
+		return err
+	}
 	err := clientV3.LockPage(pageID)
 	return err
 }

@@ -80,7 +80,14 @@ func runPlugin(c *commons.Config, plugin string) ([]commons.Tests, error) {
 
 	//Init Yatas database
 	isDatabaseExist := initYatasDatabase(&client, &account)
-	log.Printf("%v, databaseID : %v", isDatabaseExist, account.DatabaseID)
+
+	if !isDatabaseExist {
+		log.Printf("Failed to get Database. Stop notion reporting!")
+		return checksAll, nil
+	}
+
+	// Create Yatas report instance
+	CreateNotionReport(c.Tests, account, &client)
 
 	return checksAll, nil
 }
