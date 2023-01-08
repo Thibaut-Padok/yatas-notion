@@ -107,6 +107,7 @@ func createYatasInlineDatabase(client *NotionClient, account *NotionAccount) boo
 			if viewType != "list" {
 				client.UpdateTableViewList(viewID, "list")
 			}
+			client.ShowAllProperties(viewID, account.DatabaseID)
 		}
 		return true
 	}
@@ -132,6 +133,10 @@ func yatasInlineDatabaseCreateRequest(pageID string) DatabaseV1CreateRequest {
 			"Name": notionapi.TitlePropertyConfig{
 				Type:  "title",
 				Title: struct{}{},
+			},
+			"Created time": notionapi.CreatedTimePropertyConfig{
+				Type:        "created_time",
+				CreatedTime: struct{}{},
 			},
 		},
 		IsInline: true,

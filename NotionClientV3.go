@@ -167,6 +167,22 @@ func (client *NotionClientV3) GetTableViewType(databaseID string) (string, strin
 	return "", "", false
 }
 
+func (client *NotionClientV3) GetTableViewProperties(databaseID string) []string {
+	kjkClient := client.KjkClient
+	page, err := kjkClient.DownloadPage(databaseID)
+	var properties []string
+	if err != nil {
+		log.Printf("Error while getting Database TableView: %v", err)
+	} else {
+		if len(page.TableViews) > 0 {
+			for key := range page.TableViews[0].Collection.Schema {
+				properties = append(properties, key)
+			}
+		}
+	}
+	return properties
+}
+
 func (client *NotionClientV3) UpdateTableViewList(viewID, desiredType string) error {
 
 	req := TableViewTypeUpdateRequest(client.SpaceID, viewID, desiredType)
@@ -180,6 +196,15 @@ func (client *NotionClientV3) UpdateTableViewList(viewID, desiredType string) er
 
 func (client *NotionClientV3) LockPage(pageID string) error {
 	req := LockPageUpdateRequest(client.SpaceID, pageID)
+	_, err := client.saveTransactions(req)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (client *NotionClientV3) ShowProperties(viewID string, properties []string) error {
+	req := ShowPropertiesUpdateRequest(client.SpaceID, viewID, properties)
 	_, err := client.saveTransactions(req)
 	if err != nil {
 		return err

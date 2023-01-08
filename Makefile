@@ -4,15 +4,15 @@ test:
 	go test ./...
 
 build:
-	go build -o bin/yatas-template
+	go build -o bin/yatas-notion
 
 update:
 	go get -u 
 	go mod tidy
 
 install: build
-	mkdir -p ~/.yatas.d/plugins/github.com/StanGirard/yatas-template/local/
-	mv ./bin/yatas-template ~/.yatas.d/plugins/github.com/StanGirard/yatas-template/local/
+	mkdir -p ~/.yatas.d/plugins/github.com/Thibaut-Padok/yatas-notion/local/
+	mv ./bin/yatas-notion ~/.yatas.d/plugins/github.com/Thibaut-Padok/yatas-notion/local/
 
 release: test
 	standard-version

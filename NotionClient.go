@@ -43,6 +43,15 @@ func (client *NotionClient) GetTableViewType(databaseID string) (string, string,
 	return clientV3.GetTableViewType(databaseID)
 }
 
+func (client *NotionClient) GetTableViewProperties(databaseID string) []string {
+	clientV3 := client.NotionClientV3
+	var properties []string
+	if clientV3 == nil {
+		return properties
+	}
+	return clientV3.GetTableViewProperties(databaseID)
+}
+
 func (client *NotionClient) UpdateTableViewList(viewID, desiredType string) error {
 	clientV3 := client.NotionClientV3
 	if clientV3 == nil {
@@ -60,5 +69,26 @@ func (client *NotionClient) LockPage(pageID string) error {
 		return err
 	}
 	err := clientV3.LockPage(pageID)
+	return err
+}
+
+func (client *NotionClient) ShowProperties(viewID string, properties []string) error {
+	clientV3 := client.NotionClientV3
+	if clientV3 == nil {
+		err := errors.New("NotionClientV3 does not exist, please provide authToken.")
+		return err
+	}
+	err := clientV3.ShowProperties(viewID, properties)
+	return err
+}
+
+func (client *NotionClient) ShowAllProperties(viewID, databaseID string) error {
+	clientV3 := client.NotionClientV3
+	if clientV3 == nil {
+		err := errors.New("NotionClientV3 does not exist, please provide authToken.")
+		return err
+	}
+	properties := clientV3.GetTableViewProperties(databaseID)
+	err := clientV3.ShowProperties(viewID, properties)
 	return err
 }
