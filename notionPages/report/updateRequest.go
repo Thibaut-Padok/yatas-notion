@@ -1,11 +1,13 @@
-package main
+package report
 
 import (
 	"github.com/jomei/notionapi"
 	"github.com/stangirard/yatas/plugins/commons"
+
+	"github.com/Thibaut-Padok/yatas-notion/notionPages/report/categories"
 )
 
-func updatePageRequestWithTitle(test commons.Tests) notionapi.AppendBlockChildrenRequest {
+func updateRequestWithTitle(test commons.Tests) notionapi.AppendBlockChildrenRequest {
 	categoryTitle := notionapi.Text{
 		Content: test.Account,
 	}
@@ -36,11 +38,11 @@ func updatePageRequestWithTitle(test commons.Tests) notionapi.AppendBlockChildre
 	return request
 }
 
-func updatePageRequestWithCategories(test commons.Tests) notionapi.AppendBlockChildrenRequest {
+func updateRequestWithCategories(test commons.Tests) notionapi.AppendBlockChildrenRequest {
 	categoryTitle := notionapi.Text{
 		Content: "Categories",
 	}
-	categoriesBlock := createCategoriesBlock(test)
+	categoriesBlock := categories.CreateBlock(test)
 	request := notionapi.AppendBlockChildrenRequest{
 		Children: []notionapi.Block{
 			notionapi.Heading2Block{

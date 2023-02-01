@@ -1,4 +1,4 @@
-package main
+package notionV3
 
 import "github.com/kjk/notionapi"
 

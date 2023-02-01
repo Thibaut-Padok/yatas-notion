@@ -1,4 +1,4 @@
-package main
+package notionV1
 
 import (
 	"context"
@@ -9,15 +9,15 @@ import (
 	"github.com/jomei/notionapi"
 )
 
-type DatabaseV1Service interface {
-	Create(ctx context.Context, request *DatabaseV1CreateRequest) (*notionapi.Database, error)
+type DatabaseService interface {
+	Create(ctx context.Context, request *DatabaseCreateRequest) (*notionapi.Database, error)
 }
 
-type DatabaseV1Client struct {
-	Client *NotionClientV1
+type DatabaseClient struct {
+	Client *Client
 }
 
-type DatabaseV1CreateRequest struct {
+type DatabaseCreateRequest struct {
 	Parent     notionapi.Parent          `json:"parent"`
 	Title      []notionapi.RichText      `json:"title"`
 	Icon       *notionapi.Icon           `json:"icon,omitempty"`
@@ -25,7 +25,7 @@ type DatabaseV1CreateRequest struct {
 	IsInline   bool                      `json:"is_inline"`
 }
 
-func (dc *DatabaseV1Client) Create(ctx context.Context, requestBody *DatabaseV1CreateRequest) (*notionapi.Database, error) {
+func (dc *DatabaseClient) Create(ctx context.Context, requestBody *DatabaseCreateRequest) (*notionapi.Database, error) {
 	res, err := dc.Client.request(ctx, http.MethodPost, "databases", nil, requestBody)
 	if err != nil {
 		return nil, err

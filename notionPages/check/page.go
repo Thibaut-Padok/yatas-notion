@@ -1,13 +1,30 @@
-package main
+package check
 
 import (
+	"context"
+	"log"
 	"strings"
 
+	"github.com/Thibaut-Padok/yatas-notion/notionAPI"
 	"github.com/jomei/notionapi"
 	"github.com/stangirard/yatas/plugins/commons"
 )
 
-func createPageCheckRequest(check commons.Check, databaseId string) notionapi.PageCreateRequest {
+func CreatePage(client *notionAPI.Client, check commons.Check, databaseId string) {
+	clientV1 := client.ClientV1
+	pageCreateRequest := createPageRequest(check, databaseId)
+	page, err := clientV1.Page.Create(context.Background(), &pageCreateRequest)
+	if err != nil {
+		log.Printf("Error ... %v", err)
+	} else {
+		log.Printf("Check page created: %v", page.URL)
+	}
+
+	// Try to lock page if notionapi/v3 available
+	client.LockPage(string(page.ID))
+}
+
+func createPageRequest(check commons.Check, databaseId string) notionapi.PageCreateRequest {
 	//calculate status boolean
 	status := true
 	if check.Status == "FAIL" {
@@ -51,7 +68,7 @@ func createPageCheckRequest(check commons.Check, databaseId string) notionapi.Pa
 			Emoji: &emo,
 		},
 		Children: []notionapi.Block{
-			createCheckTable(check),
+			createTable(check),
 		},
 	}
 	return pageCreateRequest

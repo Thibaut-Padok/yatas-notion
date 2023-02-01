@@ -1,10 +1,10 @@
-package main
+package report
 
 import (
 	"github.com/jomei/notionapi"
 )
 
-func createReportPageRequest(client *notionapi.Client, db_id string) notionapi.PageCreateRequest {
+func createPageRequest(client *notionapi.Client, db_id string) notionapi.PageCreateRequest {
 	notionTitle := notionapi.Text{
 		Content: "Yatas report",
 	}

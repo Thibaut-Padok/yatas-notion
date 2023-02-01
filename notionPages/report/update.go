@@ -1,4 +1,4 @@
-package main
+package report
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 )
 
 func addCategoriesTable(client *notionapi.Client, blockID notionapi.BlockID, test commons.Tests) {
-	updateRequest := updatePageRequestWithCategories(test)
+	updateRequest := updateRequestWithCategories(test)
 	blocks, err := client.Block.AppendChildren(context.Background(), blockID, &updateRequest)
 	if err != nil {
 		log.Printf("Error while triing to add categories table ... %v", err)
@@ -19,7 +19,7 @@ func addCategoriesTable(client *notionapi.Client, blockID notionapi.BlockID, tes
 }
 
 func addTitleTable(client *notionapi.Client, blockID notionapi.BlockID, test commons.Tests) {
-	updateRequest := updatePageRequestWithTitle(test)
+	updateRequest := updateRequestWithTitle(test)
 	blocks, err := client.Block.AppendChildren(context.Background(), blockID, &updateRequest)
 	if err != nil {
 		log.Printf("Error while triing to add a title ... %v", err)

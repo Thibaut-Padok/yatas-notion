@@ -1,11 +1,11 @@
-package main
+package check
 
 import (
 	"github.com/jomei/notionapi"
 	"github.com/stangirard/yatas/plugins/commons"
 )
 
-func createCheckTable(check commons.Check) notionapi.Block {
+func createTable(check commons.Check) notionapi.Block {
 	table := notionapi.TableBlock{
 		BasicBlock: notionapi.BasicBlock{
 			Type:   notionapi.BlockType("table"),

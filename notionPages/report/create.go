@@ -1,4 +1,4 @@
-package main
+package report
 
 import (
 	"context"
@@ -6,18 +6,19 @@ import (
 
 	"github.com/jomei/notionapi"
 	"github.com/stangirard/yatas/plugins/commons"
+
+	"github.com/Thibaut-Padok/yatas-notion/notionAPI"
+	checkPage "github.com/Thibaut-Padok/yatas-notion/notionPages/check"
 )
 
-func CreateNotionReport(tests []commons.Tests, account NotionAccount, client *NotionClient) {
-	// client := notionapi.NewClient(notionapi.Token(account.Token))
-	// cli := NewLocalClient(client, notionapi.Token(account.Token))
+func Create(tests []commons.Tests, account notionAPI.PluginConfig, client *notionAPI.Client) {
 	// Get the different clients
-	clientV1 := client.NotionClientV1
+	clientV1 := client.ClientV1
 	defaultClient := clientV1.JomeiClient
 
 	// Create a new page corresponding to the yatas report
-	newYatasReport := createReportPageRequest(defaultClient, account.DatabaseID)
-	page, err := client.Page.Create(context.Background(), &newYatasReport)
+	newYatasReport := createPageRequest(defaultClient, account.DatabaseID)
+	page, err := client.ClientV1.Page.Create(context.Background(), &newYatasReport)
 	if err != nil {
 		log.Printf("Error during the creation of the Yamas page ... %v", err)
 	} else {
@@ -34,7 +35,7 @@ func CreateNotionReport(tests []commons.Tests, account NotionAccount, client *No
 
 				for _, check := range test.Checks {
 					// Create a new page in the inline database for each 'Check'
-					createPageCheck(client, check, db.ID.String())
+					checkPage.CreatePage(client, check, db.ID.String())
 				}
 				// Create a new Categories table for each 'Test'
 				addCategoriesTable(defaultClient, notionapi.BlockID(page.ID), test)
@@ -43,18 +44,4 @@ func CreateNotionReport(tests []commons.Tests, account NotionAccount, client *No
 		// Try to lock page if notionapi/v3 available
 		client.LockPage(page.ID.String())
 	}
-}
-
-func createPageCheck(client *NotionClient, check commons.Check, databaseId string) {
-	clientV1 := client.NotionClientV1
-	pageCreateRequest := createPageCheckRequest(check, databaseId)
-	page, err := clientV1.Page.Create(context.Background(), &pageCreateRequest)
-	if err != nil {
-		log.Printf("Error ... %v", err)
-	} else {
-		log.Printf("Check page created: %v", page.URL)
-	}
-
-	// Try to lock page if notionapi/v3 available
-	client.LockPage(string(page.ID))
 }

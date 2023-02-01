@@ -1,11 +1,11 @@
-package main
+package notionAPI
 
 import (
 	"github.com/stangirard/yatas/plugins/commons"
 )
 
 // Notion Config struct
-type NotionAccount struct {
+type PluginConfig struct {
 	Token     string `yaml:"token"`               // Token of notion connection to use notionapi/v1
 	AuthToken string `yaml:"authToken,omitempty"` // Token of web application www.notion.so to use notionapi/v3 (optionnal)
 
@@ -13,11 +13,11 @@ type NotionAccount struct {
 	DatabaseID string `yaml:"db_id,omitempty"` // DatabaseID which contains Yatas instances
 }
 
-func loadNotionPluginConfig(c *commons.Config) NotionAccount {
-	var account NotionAccount
+func LoadPluginConfig(c *commons.Config) PluginConfig {
+	var account PluginConfig
 
 	for _, r := range c.PluginConfig {
-		var potentialAccount NotionAccount
+		var potentialAccount PluginConfig
 		isThisPlugin := false
 
 		for key, value := range r {

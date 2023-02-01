@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	jsoniter "github.com/json-iterator/go"
@@ -7,7 +7,7 @@ import (
 
 var (
 	PrettyPrintJS = PrettyPrintJSJsonit
-	jsonit        = jsoniter.ConfigCompatibleWithStandardLibrary
+	Jsonit        = jsoniter.ConfigCompatibleWithStandardLibrary
 	prettyOpts    = pretty.Options{
 		Width:    80,
 		Prefix:   "",
@@ -17,7 +17,7 @@ var (
 )
 
 func PrettyPrintJSJsonit(js []byte) []byte {
-	if !jsonit.Valid(js) {
+	if !Jsonit.Valid(js) {
 		return js
 	}
 	return pretty.PrettyOptions(js, &prettyOpts)

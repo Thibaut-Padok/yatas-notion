@@ -1,12 +1,16 @@
-package main
+package report
 
-import "github.com/jomei/notionapi"
+import (
+	"github.com/jomei/notionapi"
 
-func createInlineDatabase(pageID string) DatabaseV1CreateRequest {
+	"github.com/Thibaut-Padok/yatas-notion/notionAPI/notionV1"
+)
+
+func createInlineDatabase(pageID string) notionV1.DatabaseCreateRequest {
 	title := notionapi.Text{
 		Content: "All checks",
 	}
-	database := DatabaseV1CreateRequest{
+	database := notionV1.DatabaseCreateRequest{
 		Parent: notionapi.Parent{PageID: notionapi.PageID(pageID)},
 		Title: []notionapi.RichText{
 			{

@@ -9,6 +9,10 @@ import (
 	"github.com/hashicorp/go-plugin"
 
 	"github.com/stangirard/yatas/plugins/commons"
+
+	"github.com/Thibaut-Padok/yatas-notion/notionAPI"
+	"github.com/Thibaut-Padok/yatas-notion/notionPages/report"
+	"github.com/Thibaut-Padok/yatas-notion/notionPages/yatas"
 )
 
 type YatasPlugin struct {
@@ -73,13 +77,13 @@ func runPlugin(c *commons.Config, plugin string) ([]commons.Tests, error) {
 	var checksAll []commons.Tests
 
 	// Load notion account values
-	var account = loadNotionPluginConfig(c)
+	var account = notionAPI.LoadPluginConfig(c)
 
 	// Init client
-	client := NewNotionClient(&account)
+	client := notionAPI.NewClient(&account)
 
 	//Init Yatas database
-	isDatabaseExist := initYatasDatabase(&client, &account)
+	isDatabaseExist := yatas.InitDatabase(&client, &account)
 
 	if !isDatabaseExist {
 		log.Printf("Failed to get Database. Stop notion reporting!")
@@ -87,7 +91,7 @@ func runPlugin(c *commons.Config, plugin string) ([]commons.Tests, error) {
 	}
 
 	// Create Yatas report instance
-	CreateNotionReport(c.Tests, account, &client)
+	report.Create(c.Tests, account, &client)
 
 	return checksAll, nil
 }

@@ -1,4 +1,4 @@
-package main
+package notionV1
 
 import (
 	"bytes"
@@ -19,7 +19,7 @@ const (
 	notionVersion = "2022-06-28"
 )
 
-type NotionClientV1 struct {
+type Client struct {
 	JomeiClient *notionapi.Client
 
 	httpClient    *http.Client
@@ -29,7 +29,7 @@ type NotionClientV1 struct {
 
 	Token notionapi.Token
 
-	Database DatabaseV1Service
+	Database DatabaseService
 	Block    notionapi.BlockService
 	Page     notionapi.PageService
 	User     notionapi.UserService
@@ -37,13 +37,13 @@ type NotionClientV1 struct {
 	Comment  notionapi.CommentService
 }
 
-func NewClientV1(client *notionapi.Client, token notionapi.Token) *NotionClientV1 {
+func NewClient(client *notionapi.Client, token notionapi.Token) *Client {
 	u, err := url.Parse(apiURL)
 	if err != nil {
 		panic(err)
 	}
 
-	cli := &NotionClientV1{
+	cli := &Client{
 		JomeiClient: client,
 
 		httpClient:    http.DefaultClient,
@@ -58,12 +58,12 @@ func NewClientV1(client *notionapi.Client, token notionapi.Token) *NotionClientV
 		Search:  client.Search,
 		Comment: client.Comment,
 	}
-	cli.Database = &DatabaseV1Client{Client: cli}
+	cli.Database = &DatabaseClient{Client: cli}
 
 	return cli
 }
 
-func (c *NotionClientV1) request(ctx context.Context, method string, urlStr string, queryParams map[string]string, requestBody interface{}) (*http.Response, error) {
+func (c *Client) request(ctx context.Context, method string, urlStr string, queryParams map[string]string, requestBody interface{}) (*http.Response, error) {
 	u, err := c.baseUrl.Parse(fmt.Sprintf("%s/%s", c.apiVersion, urlStr))
 	if err != nil {
 		return nil, err
